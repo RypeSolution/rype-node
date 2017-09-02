@@ -11,6 +11,7 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
+const models = require('./models')
 const app = express()
 
 app.set('view engine', 'ejs')
@@ -26,12 +27,21 @@ app.use(function (req, res, next) {
     next()
 })
 
-app.post('/signup', function(req, res) {
+app.post('/signup', function (req, res) {
     console.log(req.body)
-    res.json({hello: 'world2'})
+    models.User.create({name: `${req.body.firstName} ${req.body.lastName}`})
+        .then(user => {
+            let userJson = user.get({
+                plain: true
+            })
+            res.json(userJson)
+        })
+        .catch(error => {
+            res.json({error})
+        })
 })
 
-app.options('/signup', function(req, res) {
+app.options('/signup', function (req, res) {
     res.json({hello: 'world'})
 })
 
@@ -59,11 +69,16 @@ module.exports = app;
 
 const server = http.createServer(app)
 // Listen
-server.listen(8081)
 
-class WebSocketHandler{
+models.sequelize.sync()
+    .then(() => {
+        console.log('db synced, starting API server...')
+        server.listen(8081)
+    })
+
+class WebSocketHandler {
     
-    constructor(connection){
+    constructor(connection) {
         this.conn = connection
         this.conn.on('message', this.onMessage.bind(this))
         this.conn.on('close', this.onClose.bind(this))
@@ -71,31 +86,31 @@ class WebSocketHandler{
         this.constructor.HANDLERS[Math.random()] = this
     }
     
-    onMessage(message){
+    onMessage(message) {
         if (message.type === 'utf8') {
             console.log('Received Message: ' + message.utf8Data);
-            this.send({test:'yes'});
+            this.send({test: 'yes'});
         } else if (message.type === 'binary') {
             console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
             this.conn.sendBytes(message.binaryData);
         }
     }
     
-    send(data){
+    send(data) {
         this.conn.sendUTF(data, (error) => {
-            if(error){
+            if (error) {
                 console.error(error)
-            }else{
+            } else {
                 console.log('message sent:', data)
             }
         })
     }
     
-    onClose(reasonCode, description){
+    onClose(reasonCode, description) {
         console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
     }
     
-    static handlers(){
+    static handlers() {
         return this.HANDLERS
     }
 }
@@ -109,7 +124,7 @@ function originIsAllowed(origin) {
     return true;
 }
 
-wsServer.on('request', function(request) {
+wsServer.on('request', function (request) {
     if (!originIsAllowed(request.origin)) {
         // Make sure we only accept requests from an allowed origin
         request.reject();
