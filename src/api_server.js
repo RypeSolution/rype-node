@@ -19,10 +19,21 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    res.header("Access-Control-Request-Method", "GET,POST,PUT,DELETE,OPTIONS");
+    next()
+})
+
 app.post('/signup', function(req, res) {
     console.log(req.body)
+    res.json({hello: 'world2'})
+})
+
+app.options('/signup', function(req, res) {
     res.json({hello: 'world'})
-});
+})
 
 app.use(express.static(path.join(__dirname, '../')))
 

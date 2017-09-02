@@ -11,17 +11,15 @@ class Main extends React.Component {
             lastName: ''
         }
     }
-    
 
     handleSubmit(e) {
 		e.preventDefault();
-        console.log('submit hit!!');
         const { firstName, lastName } = this.state;
 
         //drop the api URL here
         axios({
             method: 'post',
-            url: '/signup',
+            url: 'http://localhost:8081/signup',
             data: {
                 firstName,
                 lastName
