@@ -15,13 +15,13 @@ class Main extends React.Component {
 
     handleSubmit(e) {
 		e.preventDefault();
-
+        console.log('submit hit!!');
         const { firstName, lastName } = this.state;
 
         //drop the api URL here
         axios({
             method: 'post',
-            url: '',
+            url: '/signup',
             data: {
                 firstName,
                 lastName
@@ -29,9 +29,11 @@ class Main extends React.Component {
         })
         .then(function (response) {
             //on success of POST, do something here...
+            console.log('response:', response)
         })
         .catch(function (error) {
             //do somethign here with error (http or api error)
+            console.error(error)
         });
     }
 

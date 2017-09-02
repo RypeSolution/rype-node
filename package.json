@@ -22,10 +22,15 @@
   "homepage": "https://github.com/RypeSolution/Dev#readme",
   "dependencies": {
     "axios": "^0.16.2",
+    "body-parser": "^1.17.2",
     "bootstrap": "^3.3.7",
+    "cookie-parser": "^1.4.3",
+    "express": "latest",
+    "morgan": "^1.8.2",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.2",
-    "react-dom": "^15.6.1"
+    "react-dom": "^15.6.1",
+    "websocket": "^1.0.24"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
