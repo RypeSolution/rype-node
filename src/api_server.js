@@ -3,6 +3,7 @@
  */
 const http = require('http')
 const WebSocketServer = require('websocket').server;
+const _ = require('lodash');
 
 // Serve up public/ftp folder
 const express = require('express');
@@ -10,6 +11,7 @@ const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const jwt = require('jwt-simple')
 
 const models = require('./models')
 const app = express()
@@ -24,12 +26,22 @@ app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
     res.header("Access-Control-Request-Method", "GET,POST,PUT,DELETE,OPTIONS");
+    
     next()
 })
 
-app.post('/signup', function (req, res) {
-    console.log(req.body)
-    models.User.create({name: `${req.body.firstName} ${req.body.lastName}`})
+function createUser(req, res) {
+    console.log('request body:', req.body)
+    let name = `${req.body.firstName} ${req.body.lastName}`
+    
+    let userData = {
+        name: name,
+        password: req.body.password,
+        email: req.body.email
+    }
+    
+    console.log('creating user:', userData)
+    models.User.create(userData)
         .then(user => {
             let userJson = user.get({
                 plain: true
@@ -39,9 +51,61 @@ app.post('/signup', function (req, res) {
         .catch(error => {
             res.json({error})
         })
+}
+
+function authenticate(req, res) {
+    let email = req.body.email;
+    let password = req.body.password;
+    console.log('authenticating: email=%s', email);
+    if (email && password) {
+        return models.User.findOne({where: {email: email}}).then(function (user) {
+            let ret = null;
+            if (user) {
+                let authenticated = user.authenticate(password);
+                ret = authenticated && user || null;
+                console.log('authenticated %j: %s', user.toJSON(), authenticated);
+            }
+            return ret;
+        })
+            .then(function (user) {
+                return _.isObject(user) ? res.json(user) : res.send(401);
+            })
+    } else {
+        return res.send(401);
+    }
+}
+
+app.post('/api/sessions', function (req, res, next) {
+    let email = req.body.email;
+    let password = req.body.password;
+    
+    if (email && password) {
+        return models.User.findOne({where: {email: email}})
+            .then(function (user) {
+                if (user && user.authenticate(password)) {
+                    console.log('authenticated %s: %j', email, user.toJSON());
+                    let token = jwt.encode({email: email}, 'SECRET');
+                    return res.send(token)
+                } else {
+                    return res.sendStatus(401)
+                }
+            }).catch((err) => {
+                return next(err)
+            })
+    } else {
+        return res.sendStatus(401);
+    }
 })
 
+app.post('/authenticate', authenticate)
+app.post('/api/users', createUser)
+app.post('/signup', createUser)
+
 app.options('/signup', function (req, res) {
+    res.json({hello: 'world'})
+})
+
+app.options('/authenticate', function (req, res) {
     res.json({hello: 'world'})
 })
 
@@ -62,7 +126,8 @@ app.use(function (err, req, res, next) {
     
     // render the error page
     res.status(err.status || 500);
-    res.render('error');
+    //res.render('error');
+    console.error(err)
 });
 
 module.exports = app;
@@ -72,8 +137,9 @@ const server = http.createServer(app)
 
 models.sequelize.sync()
     .then(() => {
-        console.log('db synced, starting API server...')
-        server.listen(8081)
+        let port = 8081;
+        console.log(`db synced, starting API server on ${port}...`)
+        server.listen(port)
     })
 
 class WebSocketHandler {

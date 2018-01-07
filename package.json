@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack -d && cp src/app/index.html dist/index.html && webpack-dev-server --hot --inline --colors --progress --content-base src/",
+    "build": "webpack -d && cp src/app/index.html dist/index.html && webpack-dev-server --hot --inline --public --colors --progress --content-base src/",
     "build-prod": "webpack -p && cp src/app/index.html dist/index.html",
     "test": "echo \"Error: no test specified\" && exit 1",
     "babel": "babel",
@@ -30,6 +30,7 @@
     "ejs": "^2.5.7",
     "express": "latest",
     "gulp": "^3.9.1",
+    "jwt-simple": "^0.5.1",
     "lodash": "latest",
     "moment": "^2.18.1",
     "morgan": "^1.8.2",

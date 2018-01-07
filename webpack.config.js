@@ -10,7 +10,11 @@ module.exports = {
        path: DIST_PATH,   
        filename: 'app.dist.js',
        publicPath: '/app/'
-   },  
+   },
+    devServer: {
+        host: '0.0.0.0',
+        disableHostCheck: true
+    },
    module: {
        loaders: [
            {
