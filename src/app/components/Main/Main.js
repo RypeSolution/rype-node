@@ -8,21 +8,26 @@ class Main extends React.Component {
         super(props);
         this.state = {
             firstName: '',
-            lastName: ''
+            lastName: '',
+            email: '',
+            password: '',
+            passwordConfirm: ''
         }
     }
 
     handleSubmit(e) {
 		e.preventDefault();
-        const { firstName, lastName } = this.state;
-
+        const { firstName, lastName, email, password } = this.state;
+        
         //drop the api URL here
         axios({
             method: 'post',
-            url: 'http://localhost:8081/signup',
+            url: 'http://imac:8081/signup',
             data: {
                 firstName,
-                lastName
+                lastName,
+                email,
+                password
             }
         })
         .then(function (response) {
@@ -36,7 +41,7 @@ class Main extends React.Component {
     }
 
     render() {
-        const { firstName, lastName } = this.state;
+        const { firstName, lastName, email, password, passwordConfirm } = this.state;
 
         return (
             <div className="container">
@@ -64,6 +69,41 @@ class Main extends React.Component {
                                         value={lastName}
                                         onChange={e => this.setState({
                                             lastName: e.target.value
+                                        })}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>{text.form.labelEmail}</label>
+                                    <input
+                                        className="form-control"
+                                        placeholder={text.form.email}
+                                        value={email}
+                                        onChange={e => this.setState({
+                                            email: e.target.value
+                                        })}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>{text.form.labelPassword}</label>
+                                    <input
+                                        className="form-control"
+                                        placeholder={text.form.password}
+                                        value={password}
+                                        type='password'
+                                        onChange={e => this.setState({
+                                            password: e.target.value
+                                        })}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>{text.form.labelConfirmPassword}</label>
+                                    <input
+                                        className="form-control"
+                                        placeholder={text.form.passwordConfirm}
+                                        value={passwordConfirm}
+                                        type='password'
+                                        onChange={e => this.setState({
+                                            passwordConfirm: e.target.value
                                         })}
                                     />
                                 </div>
