@@ -137,7 +137,7 @@ const server = http.createServer(app)
 
 models.sequelize.sync()
     .then(() => {
-        let port = 8081;
+        let port = 9000;
         console.log(`db synced, starting API server on ${port}...`)
         server.listen(port)
     })

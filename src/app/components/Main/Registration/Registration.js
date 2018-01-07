@@ -22,7 +22,7 @@ class Registration extends React.Component {
         //drop the api URL here
         axios({
             method: 'post',
-            url: 'http://imac:8081/signup',
+            url: `${text.form.apiUrl}/signup`,
             data: {
                 firstName,
                 lastName,

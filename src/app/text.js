@@ -11,6 +11,7 @@ export default {
         passwordConfirm: 'Please confirm password',
         labelEmail: 'Email:',
         labelPassword: 'Password:',
-        labelConfirmPassword: 'Confirm password:'
+        labelConfirmPassword: 'Confirm password:',
+        apiUrl: 'http://localhost:9000'
     }  
 };

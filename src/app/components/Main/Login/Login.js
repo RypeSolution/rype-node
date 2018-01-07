@@ -18,7 +18,7 @@ class Login extends React.Component {
         //drop the api URL here
         axios({
             method: 'post',
-            url: 'http://imac:8081/authenticate',
+            url: `${text.form.apiUrl}/authenticate`,
             data: {
                 email,
                 password
