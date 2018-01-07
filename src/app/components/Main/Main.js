@@ -30,8 +30,8 @@ class Main extends React.Component {
 
         return (
             <div>
-                <button onClick={e => this.handleOptionReg()}>Registration</button>
-                <button onClick={e => this.handleOptionLog()}>Login</button>
+                <button onClick={e => this.handleOptionReg()}>Sign Up</button>
+                <button onClick={e => this.handleOptionLog()}>Sign In</button>
                 {this.state.registration === 'Registration' &&
                     <Registration />
                 }
