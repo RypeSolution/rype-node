@@ -1,9 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom'; 
-import Main from './components/Main/Main';
+import App from './components/App';
+import { BrowserRouter } from 'react-router-dom';
  
-ReactDOM.render(
-    <Main />,
-    document.querySelector( '.js-app' )
+ReactDOM.render((
+    <BrowserRouter>
+    <App />
+  </BrowserRouter>
+  ), document.querySelector( '.js-app' )
 );
 
