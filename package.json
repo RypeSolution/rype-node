@@ -8,6 +8,7 @@
     "build-prod": "webpack -p && cp src/app/index.html dist/index.html",
     "test": "echo \"Error: no test specified\" && exit 1",
     "babel": "babel",
+    "api-server": "node ./src/api_server",
     "webpack": "webpack",
     "dbinit": "./node_modules/.bin/sequelize db:migrate --config=src/db.js --migrations-path=src/db/migrations --seeders-path=src/db/seeders"
   },
