@@ -20,8 +20,7 @@ class RentItems extends DbObject {
 
                 }
             }
-        }
-    
+
 
     static associate(models) {
 
