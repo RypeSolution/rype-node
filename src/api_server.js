@@ -163,7 +163,13 @@ class WebSocketHandler {
     }
     
     send(data) {
-        this.conn.sendUTF(data, (error) => {
+        let dataStr = data
+
+        if(!_.isString(data)){
+            dataStr = JSON.stringify(data);
+        }
+
+        this.conn.sendUTF(dataStr, (error) => {
             if (error) {
                 console.error(error)
             } else {
@@ -173,7 +179,7 @@ class WebSocketHandler {
     }
     
     onClose(reasonCode, description) {
-        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+        console.log((new Date()) + ' Peer  disconnected.');
     }
     
     static handlers() {
@@ -197,7 +203,7 @@ wsServer.on('request', function (request) {
         console.log((new Date()) + ' Connection from origin ' + request.origin + ' rejected.');
         return;
     }
-    console.dir(request.resourceURL)
+    console.dir('websocket:', request.resourceURL)
     
     const connection = request.accept('echo-protocol', request.origin);
     
