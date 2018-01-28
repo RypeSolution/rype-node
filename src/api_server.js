@@ -179,7 +179,7 @@ class WebSocketHandler {
     }
     
     onClose(reasonCode, description) {
-        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+        console.log((new Date()) + ' Peer  disconnected.');
     }
     
     static handlers() {

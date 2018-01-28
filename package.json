@@ -52,10 +52,10 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "css-loader": "^0.28.5",
+    "sequelize-cli": "^2.6.0",
+    "sqlite3": "^3.1.13",
     "style-loader": "^0.18.2",
     "webpack": "^3.5.5",
-    "webpack-dev-server": "^2.7.1",
-    "sequelize-cli": "^2.6.0",
-    "sqlite3": "^3.1.8"
+    "webpack-dev-server": "^2.7.1"
   }
 }

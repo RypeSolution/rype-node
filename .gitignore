@@ -9,4 +9,5 @@ node_modules
 npm-debug.log
 .idea/
 src/db/db.development.sqlite
+dist/*
 dist/app.dist.js
