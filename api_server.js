@@ -13,7 +13,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const jwt = require('jwt-simple')
 
-const models = require('./models')
+const models = require('./models/index')
 const app = express()
 
 app.set('view engine', 'ejs')

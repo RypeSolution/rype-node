@@ -8,6 +8,6 @@ node_modules
 .env
 npm-debug.log
 .idea/
-src/db/db.development.sqlite
+db/db.development.sqlite
 dist/*
-dist/app.dist.js
+!dist/.keep

@@ -1,4 +1,4 @@
-const DbObject = require('../lib/db').DbObject
+const DbObject = require('./db').DbObject
 
 class RentItems extends DbObject {
 
