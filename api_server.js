@@ -142,53 +142,6 @@ models.sequelize.sync()
         server.listen(port)
     })
 
-class WebSocketHandler {
-    
-    constructor(connection) {
-        this.conn = connection
-        this.conn.on('message', this.onMessage.bind(this))
-        this.conn.on('close', this.onClose.bind(this))
-        
-        this.constructor.HANDLERS[Math.random()] = this
-    }
-    
-    onMessage(message) {
-        if (message.type === 'utf8') {
-            console.log('Received Message: ' + message.utf8Data);
-            this.send({test: 'yes'});
-        } else if (message.type === 'binary') {
-            console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
-            this.conn.sendBytes(message.binaryData);
-        }
-    }
-    
-    send(data) {
-        let dataStr = data
-
-        if(!_.isString(data)){
-            dataStr = JSON.stringify(data);
-        }
-
-        this.conn.sendUTF(dataStr, (error) => {
-            if (error) {
-                console.error(error)
-            } else {
-                console.log('message sent:', data)
-            }
-        })
-    }
-    
-    onClose(reasonCode, description) {
-        console.log((new Date()) + ' Peer  disconnected.');
-    }
-    
-    static handlers() {
-        return this.HANDLERS
-    }
-}
-
-WebSocketHandler.HANDLERS = {}
-
 wsServer = new WebSocketServer({httpServer: server, autoAcceptConnections: false});
 
 function originIsAllowed(origin) {
@@ -209,5 +162,41 @@ wsServer.on('request', function (request) {
     
     connection._resourceURL = request.resourceURL
     console.log((new Date()) + ' Connection accepted.');
-    new WebSocketHandler(connection)
+    
+    connection.on('message', function(msg){
+        let parsedMsg  = JSON.parse(msg.utf8Data)
+        let resp = require('./message').wsHandler.onMessage(this, {msg:parsedMsg, type:msg.type, raw:msg})
+        
+        switch(resp.type){
+            case 'utf8':
+                let dataStr = resp
+                
+                if(_.isObject(dataStr) && 'topic' in parsedMsg && !('topic' in dataStr)){
+                    dataStr.topic = parsedMsg.topic
+                }
+                
+                if (!_.isString(dataStr)) {
+                    dataStr = JSON.stringify(dataStr);
+                }
+                
+                this.sendUTF(dataStr, (error) => {
+                    if (error) {
+                        console.error(error)
+                    } else {
+                        console.log('message sent:', dataStr)
+                    }
+                })
+                break;
+            case 'binary':
+                this.sendBytes(resp.binaryData);
+                break;
+            default:
+                throw Error(`unknown response data type ${resp.dataType}`)
+        }
+        
+    })
+    
+    connection.on('close', function(reasonCode, description){
+        require('./message').wsHandler.onClose(this, reasonCode, description)
+    })
 });
