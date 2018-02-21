@@ -15,6 +15,7 @@ const jwt = require('jwt-simple')
 
 const models = require('./models/index')
 const app = express()
+const wsHandler = require('./message').wsHandler
 
 app.set('view engine', 'ejs')
 app.use(logger('":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
@@ -47,6 +48,8 @@ function createUser(req, res) {
                 plain: true
             })
             res.json(userJson)
+    
+            wsHandler.emit('db_update', 'NEW', userJson)
         })
         .catch(error => {
             res.json({error})
@@ -161,24 +164,21 @@ wsServer.on('request', function (request) {
     const connection = request.accept('echo-protocol', request.origin);
     
     connection._resourceURL = request.resourceURL
-    console.log((new Date()) + ' Connection accepted.');
+    console.log((new Date()) + ' Connection accepted.')
     
-    connection.on('message', function(msg){
-        let parsedMsg  = JSON.parse(msg.utf8Data)
-        let resp = require('./message').wsHandler.onMessage(this, {msg:parsedMsg, type:msg.type, raw:msg})
-        
+    connection.send = function (topic, resp) {
         switch(resp.type){
             case 'utf8':
                 let dataStr = resp
-                
-                if(_.isObject(dataStr) && 'topic' in parsedMsg && !('topic' in dataStr)){
-                    dataStr.topic = parsedMsg.topic
+            
+                if(_.isObject(dataStr) && topic && !('topic' in dataStr)){
+                    dataStr.topic = topic
                 }
-                
+            
                 if (!_.isString(dataStr)) {
                     dataStr = JSON.stringify(dataStr);
                 }
-                
+            
                 this.sendUTF(dataStr, (error) => {
                     if (error) {
                         console.error(error)
@@ -193,7 +193,12 @@ wsServer.on('request', function (request) {
             default:
                 throw Error(`unknown response data type ${resp.dataType}`)
         }
-        
+    }
+    
+    connection.on('message', function(msg){
+        let parsedMsg  = JSON.parse(msg.utf8Data)
+        let resp = require('./message').wsHandler.onMessage(this, {msg:parsedMsg, type:msg.type, raw:msg})
+        this.send(parsedMsg.topic, resp)
     })
     
     connection.on('close', function(reasonCode, description){

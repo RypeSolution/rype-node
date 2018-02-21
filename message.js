@@ -9,6 +9,7 @@ class WebSocketHandler extends EventEmitter {
     
     constructor() {
         super()
+        this.subscribers = {}
     }
     
     onMessage(connection, message) {
@@ -16,12 +17,12 @@ class WebSocketHandler extends EventEmitter {
     
         console.log('Received Message: ', msg)
         
-        let parsed = url.parse(msg.topic)
+        let parsed = url.parse(msg.topic, true)
         let handler = this.handlers[parsed.pathname]
         
         if(!handler) return {data: 404, type: 'utf8'}
     
-        let resp = handler(connection, msg)
+        let resp = handler(connection, _.extend({$msg: msg}, parsed.query))
         
         if(_.isString(resp)){
             resp = {type:'utf8', data:resp}
@@ -37,7 +38,17 @@ class WebSocketHandler extends EventEmitter {
     }
     
     onClose(connection, reasonCode, description) {
-        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.')
+        for(let [sub, conns] of _.toPairs(this.subscribers)){
+            console.log('[onClose]', sub, ':', _.includes(conns, connection))
+            _.remove(conns, connection)
+        }
+    }
+    
+    addSubscription(subject, conn){
+        let subs = this.subscribers[subject] = this.subscribers[subject] || []
+        subs.push(conn)
+        console.log('[addSubscription] ', subject)
     }
     
     get handlers() {
@@ -49,8 +60,21 @@ WebSocketHandler.HANDLERS = {}
 
 const wsHandler = new WebSocketHandler()
 
+wsHandler.on('db_update', (changeType, model) => {
+    for(let subscriberConn of wsHandler.subscribers['db_update'] || []){
+        subscriberConn.send('/subscribe?subject=db_update', {type: 'utf8', data:{updates:[{changeType, value:model}]}})
+    }
+})
+
 wsHandler.topic('/status', (conn, msg) => {
     return {data: 'hello world'}
+})
+
+wsHandler.topic('/subscribe', (conn, msg) => {
+    console.log('MSG', msg)
+    wsHandler.addSubscription(msg.subject, conn)
+    
+    return {data: {subscribed: msg.subject || null}}
 })
 
 module.exports = {wsHandler}
