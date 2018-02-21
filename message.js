@@ -49,6 +49,7 @@ class WebSocketHandler extends EventEmitter {
         let subs = this.subscribers[subject] = this.subscribers[subject] || []
         subs.push(conn)
         console.log('[addSubscription] ', subject)
+        wsHandler.emit('subscription_added', subject, conn)
     }
     
     get handlers() {
@@ -60,9 +61,9 @@ WebSocketHandler.HANDLERS = {}
 
 const wsHandler = new WebSocketHandler()
 
-wsHandler.on('db_update', (changeType, model) => {
+wsHandler.on('db_update', (updates) => {
     for(let subscriberConn of wsHandler.subscribers['db_update'] || []){
-        subscriberConn.send('/subscribe?subject=db_update', {type: 'utf8', data:{updates:[{changeType, value:model}]}})
+        subscriberConn.send('/subscribe?subject=db_update', {type: 'utf8', data:{updates}})
     }
 })
 

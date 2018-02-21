@@ -31,6 +31,16 @@ app.use(function (req, res, next) {
     next()
 })
 
+wsHandler.on('subscription_added', subject => {
+    console.log('sending snapshot')
+    models.User.all().then((users) => {
+        let updates = users.map(u => {
+            return {changeType: 'NEW', value: u.get({plain: true})}
+        })
+        wsHandler.emit('db_update', updates)
+    })
+})
+
 function createUser(req, res) {
     console.log('request body:', req.body)
     let name = `${req.body.firstName} ${req.body.lastName}`
@@ -48,8 +58,8 @@ function createUser(req, res) {
                 plain: true
             })
             res.json(userJson)
-    
-            wsHandler.emit('db_update', 'NEW', userJson)
+            
+            wsHandler.emit('db_update', [{changeType: 'NEW', value: userJson}])
         })
         .catch(error => {
             res.json({error})
@@ -138,6 +148,7 @@ module.exports = app;
 const server = http.createServer(app)
 // Listen
 
+
 models.sequelize.sync()
     .then(() => {
         let port = 9000;
@@ -167,18 +178,18 @@ wsServer.on('request', function (request) {
     console.log((new Date()) + ' Connection accepted.')
     
     connection.send = function (topic, resp) {
-        switch(resp.type){
+        switch (resp.type) {
             case 'utf8':
                 let dataStr = resp
-            
-                if(_.isObject(dataStr) && topic && !('topic' in dataStr)){
+                
+                if (_.isObject(dataStr) && topic && !('topic' in dataStr)) {
                     dataStr.topic = topic
                 }
-            
+                
                 if (!_.isString(dataStr)) {
                     dataStr = JSON.stringify(dataStr);
                 }
-            
+                
                 this.sendUTF(dataStr, (error) => {
                     if (error) {
                         console.error(error)
@@ -195,13 +206,13 @@ wsServer.on('request', function (request) {
         }
     }
     
-    connection.on('message', function(msg){
-        let parsedMsg  = JSON.parse(msg.utf8Data)
-        let resp = require('./message').wsHandler.onMessage(this, {msg:parsedMsg, type:msg.type, raw:msg})
+    connection.on('message', function (msg) {
+        let parsedMsg = JSON.parse(msg.utf8Data)
+        let resp = require('./message').wsHandler.onMessage(this, {msg: parsedMsg, type: msg.type, raw: msg})
         this.send(parsedMsg.topic, resp)
     })
     
-    connection.on('close', function(reasonCode, description){
+    connection.on('close', function (reasonCode, description) {
         require('./message').wsHandler.onClose(this, reasonCode, description)
     })
 });
