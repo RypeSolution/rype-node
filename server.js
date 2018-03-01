@@ -20,7 +20,7 @@ const options = {
 
 const server = new WebpackDevServer(webpack(config), options);
 
-require('./api_server') // start api server
+//require('./api_server') // start api server
 
 server.listen(port, process.env.PORT ? 'rype16.herokuapp.com' : '0.0.0.0', function (err) {
     if (err) {
