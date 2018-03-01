@@ -15,6 +15,9 @@ module.exports = {
         host: process.env.PORT ? 'rype16.herokuapp.com' : '0.0.0.0',
         disableHostCheck: true,
         port: process.env.PORT || 8080,
+        headers: {
+            "Access-Control-Allow-Origin": "*"
+        }
     },
    module: {
        loaders: [

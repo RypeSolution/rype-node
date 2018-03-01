@@ -8,7 +8,7 @@
     "build-prod": "webpack -p && cp src/app/index.html dist/index.html",
     "test": "echo \"Error: no test specified\" && exit 1",
     "babel": "babel",
-    "start": "NODE_ENV=development node server",
+    "start": "./node_modules/webpack/bin/webpack.js -p --progress && cp src/app/index.html dist/index.html && node server.js",
     "webpack": "webpack",
     "dbinit": "./node_modules/.bin/sequelize db:migrate --config=src/db.js --migrations-path=src/db/migrations --seeders-path=src/db/seeders"
   },
@@ -56,6 +56,7 @@
     "sqlite3": "^3.1.13",
     "style-loader": "^0.18.2",
     "webpack": "^3.5.5",
-    "webpack-dev-server": "^2.7.1"
+    "webpack-dev-server": "^2.7.1",
+    "express": "latest"
   }
 }
