@@ -151,7 +151,7 @@ const server = http.createServer(app)
 
 models.sequelize.sync()
     .then(() => {
-        let port = process.env.PORT || 9000;
+        let port = 9000;
         console.log(`db synced, starting API server on ${port}...`)
         server.listen(port)
     })
@@ -194,7 +194,7 @@ wsServer.on('request', function (request) {
                     if (error) {
                         console.error(error)
                     } else {
-                        console.log('message sent:', dataStr)
+                        console.log('message sent:', dataStr.slice(0, 100))
                     }
                 })
                 break;
@@ -216,3 +216,5 @@ wsServer.on('request', function (request) {
         require('./message').wsHandler.onClose(this, reasonCode, description)
     })
 });
+
+module.exports = app

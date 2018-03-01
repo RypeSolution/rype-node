@@ -8,7 +8,7 @@
     "build-prod": "webpack -p && cp src/app/index.html dist/index.html",
     "test": "echo \"Error: no test specified\" && exit 1",
     "babel": "babel",
-    "api-server": "node ./src/api_server",
+    "start": "node server",
     "webpack": "webpack",
     "dbinit": "./node_modules/.bin/sequelize db:migrate --config=src/db.js --migrations-path=src/db/migrations --seeders-path=src/db/seeders"
   },
@@ -42,7 +42,9 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "sequelize": "^3.30.2",
-    "websocket": "^1.0.24"
+    "websocket": "^1.0.24",
+    "webpack": "latest",
+    "webpack-dev-server": "latest"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
