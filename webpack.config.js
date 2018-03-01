@@ -12,9 +12,9 @@ module.exports = {
        publicPath: '/app/'
    },
     devServer: {
-        host: '0.0.0.0',
+        host: process.env.PORT ? 'rype16.herokuapp.com' : '0.0.0.0',
         disableHostCheck: true,
-        port: process.env.PORT || 8086,
+        port: process.env.PORT || 8080,
     },
    module: {
        loaders: [

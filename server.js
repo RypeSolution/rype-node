@@ -7,14 +7,14 @@ const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const config = require('./webpack.config');
 console.log('Starting the dev web server...');
-const port = process.env.PORT || 8081
+const port = process.env.PORT || 8080
 const path = require('path');
 
 const options = {
     publicPath: config.output.publicPath,
     hot: true,
     inline: true,
-    contentBase: 'src',
+    contentBase: './src',
     stats: { colors: true }
 };
 
@@ -22,7 +22,7 @@ const server = new WebpackDevServer(webpack(config), options);
 
 require('./api_server') // start api server
 
-server.listen(port, '0.0.0.0', function (err) {
+server.listen(port, process.env.PORT ? 'rype16.herokuapp.com' : '0.0.0.0', function (err) {
     if (err) {
         console.log(err);
     }
