@@ -42,9 +42,7 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "sequelize": "^3.30.2",
-    "websocket": "^1.0.24",
-    "webpack": "latest",
-    "webpack-dev-server": "latest"
+    "websocket": "^1.0.24"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
