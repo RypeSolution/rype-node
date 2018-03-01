@@ -2,7 +2,7 @@
   "name": "dev",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "api_server.js",
   "scripts": {
     "build": "webpack -d && cp src/app/index.html dist/index.html && webpack-dev-server --hot --inline --public --colors --progress --content-base src/",
     "build-prod": "webpack -p && cp src/app/index.html dist/index.html",

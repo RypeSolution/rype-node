@@ -151,7 +151,7 @@ const server = http.createServer(app)
 
 models.sequelize.sync()
     .then(() => {
-        let port = 9000;
+        let port = process.env.PORT || 9000;
         console.log(`db synced, starting API server on ${port}...`)
         server.listen(port)
     })
