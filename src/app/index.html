@@ -14,7 +14,8 @@
         let deferred = {};
 
         function connectToServer() {
-            let ws = new WebSocket(`${location.protocol === 'https:' ? 'wss://' : 'ws://'}${location.hostname}`, 'echo-protocol');
+            let apiPort = 9000
+            let ws = new WebSocket(`${location.protocol === 'https:' ? 'wss://' : 'ws://'}${location.hostname}:${apiPort}`, 'echo-protocol');
 
             ws.onclose = () => {
                 console.log('close');
