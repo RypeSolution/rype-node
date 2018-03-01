@@ -8,7 +8,7 @@
     "build-prod": "webpack -p && cp src/app/index.html dist/index.html",
     "test": "echo \"Error: no test specified\" && exit 1",
     "babel": "babel",
-    "start": "npm run dbinit && ./node_modules/webpack/bin/webpack.js -p --progress && cp src/app/index.html dist/index.html && NODE_ENV=development node server.js",
+    "start": "./node_modules/webpack/bin/webpack.js -p --progress && cp src/app/index.html dist/index.html && NODE_ENV=development node server.js",
     "webpack": "webpack",
     "dbinit": "./node_modules/.bin/sequelize db:migrate --config=db.js --migrations-path=db/migrations --seeders-path=db/seeders"
   },
