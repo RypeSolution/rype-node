@@ -20,7 +20,7 @@ console.log('Starting the dev web server...');
 
 //const server = new WebpackDevServer(webpack(config), options);
 
-require('./api_server') // start api server
+//require('./api_server') // start api server
 
 const path = require('path');
 const express = require('express');

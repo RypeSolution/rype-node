@@ -14,22 +14,22 @@
         let deferred = {};
 
         function connectToServer() {
-            let apiPort = 9000
-            let ws = new WebSocket(`${location.protocol === 'https:' ? 'wss://' : 'ws://'}${location.hostname}:${apiPort}`, 'echo-protocol');
+            let hostUrl = location.hostname.indexOf('localhost') === -1 ? 'rype-api.herokuapp.com' : 'localhost:9000'
+            let ws = new WebSocket(`${location.protocol === 'https:' ? 'wss://' : 'ws://'}${hostUrl}`, 'echo-protocol');
 
             ws.onclose = () => {
-                console.log('close');
+                console.log('close')
                 deferred.rej(new Error('socket closed!'))
-            };
+            }
 
             ws.onopen = () => {
-                console.log('open');
-            };
+                console.log('open')
+            }
 
             ws.onmessage = (msg) => {
-                console.log('message:', msg);
-                deferred.res(msg.data);
-            };
+                console.log('message:', msg)
+                deferred.res(msg.data)
+            }
 
             ws.json = (data) => {
                 let str = JSON.stringify(data)
