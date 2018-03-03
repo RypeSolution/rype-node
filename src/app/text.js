@@ -12,6 +12,6 @@ export default {
         labelEmail: 'Email:',
         labelPassword: 'Password:',
         labelConfirmPassword: 'Confirm password:',
-        apiUrl: 'http://localhost:9000'
-    }  
+        apiUrl: `${location.protocol}//${location.hostname.indexOf('localhost') === -1 ? 'rype-api.herokuapp.com' : 'localhost:9000'}`
+    }
 };
