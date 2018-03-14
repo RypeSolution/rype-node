@@ -1,31 +1,26 @@
 import React from 'react';
 import axios from 'axios';
-// import './Registration.css';
-import text from '../../../text';
+import text from '../../text';
 
-class Registration extends React.Component {
+
+class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            firstName: '',
-            lastName: '',
             email: '',
-            password: '',
-            passwordConfirm: ''
+            password: ''
         }
     }
 
     handleSubmit(e) {
 		e.preventDefault();
-        const { firstName, lastName, email, password } = this.state;
+        const { email, password } = this.state;
         
         //drop the api URL here
         axios({
             method: 'post',
-            url: `${text.form.apiUrl}/signup`,
+            url: `${text.form.apiUrl}/authenticate`,
             data: {
-                firstName,
-                lastName,
                 email,
                 password
             }
@@ -41,37 +36,16 @@ class Registration extends React.Component {
     }
 
     render() {
-        const { firstName, lastName, email, password, passwordConfirm } = this.state;
+
+        const { email, password } = this.state;
 
         return (
             <div className="container">
                 <div className="row">
                     <div className="col-lg-6">
-                        <h1 className="test">{text.header}</h1>
+                        <h1 className="test">{text.headerLogin}</h1>
                         <form action="" noValidate="novalidate" onSubmit={e => this.handleSubmit(e)}>
                             <fieldset>
-                                <div className="form-group">
-                                    <label>{text.form.labelName}</label>
-                                    <input
-                                        className="form-control"
-                                        placeholder={text.form.inputFirstNameText}
-                                        value={firstName}
-                                        onChange={e => this.setState({
-                                            firstName: e.target.value
-                                        })}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>{text.form.labelLastName}</label>
-                                    <input
-                                        className="form-control"
-                                        placeholder={text.form.inputLastNameText}
-                                        value={lastName}
-                                        onChange={e => this.setState({
-                                            lastName: e.target.value
-                                        })}
-                                    />
-                                </div>
                                 <div className="form-group">
                                     <label>{text.form.labelEmail}</label>
                                     <input
@@ -95,18 +69,6 @@ class Registration extends React.Component {
                                         })}
                                     />
                                 </div>
-                                <div className="form-group">
-                                    <label>{text.form.labelConfirmPassword}</label>
-                                    <input
-                                        className="form-control"
-                                        placeholder={text.form.passwordConfirm}
-                                        value={passwordConfirm}
-                                        type='password'
-                                        onChange={e => this.setState({
-                                            passwordConfirm: e.target.value
-                                        })}
-                                    />
-                                </div>
                                 <button className="btn btn-primary" type="submit">
                                 {text.form.button}
                                 </button>
@@ -119,4 +81,4 @@ class Registration extends React.Component {
     }
 }
 
-export default Registration;
+export default Login;
