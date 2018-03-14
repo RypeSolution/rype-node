@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import './Registration.css';
+// import './Registration.css';
 import text from '../../../text';
 
 class Registration extends React.Component {

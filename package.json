@@ -8,8 +8,9 @@
     "build-prod": "webpack -p && cp src/app/index.html dist/index.html",
     "test": "echo \"Error: no test specified\" && exit 1",
     "babel": "babel",
-    "start": "./node_modules/webpack/bin/webpack.js -p --progress && cp src/app/index.html dist/index.html && NODE_ENV=development node server.js",
-    "webpack": "webpack"
+    "startTest": "./node_modules/webpack/bin/webpack.js -p --progress && cp src/app/index.html dist/index.html && NODE_ENV=development node server.js",
+    "webpack": "webpack",
+    "start": "webpack-dev-server"
   },
   "repository": {
     "type": "git",
@@ -27,14 +28,19 @@
     "bootstrap": "^3.3.7",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.7",
+    "html-webpack-plugin": "^3.0.4",
     "moment": "^2.18.1",
     "morgan": "^1.8.2",
     "neo-async": "^2.5.0",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.2",
-    "react-dom": "^15.6.1",
+    "react-dom": "^15.6.2",
+    "react-redux": "^5.0.6",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
+    "react-router-redux": "^4.0.8",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
     "tapable": "^1.0.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
@@ -43,9 +49,23 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "css-loader": "^0.28.5",
+    "path": "^0.12.7",
     "style-loader": "^0.18.2",
-    "webpack": "^3.5.5",
-    "webpack-dev-server": "^2.7.1",
+    "webpack": "^4.1.0",
+    "webpack-dev-server": "^3.1.0",
     "express": "latest"
+  },
+  "devDependencies": {
+    "html-webpack-plugin": "^3.0.6",
+    "webpack-cli": "^2.0.11",
+    "babel-core": "^6.26.0",
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.3",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-register": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "redux-immutable": "^4.0.0",
+    "immutable": "https://registry.npmjs.org/immutable/-/immutable-3.8.1.tgz"
   }
 }
